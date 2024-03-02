@@ -4,10 +4,11 @@
   "description": "It tells about movie details like year, rating, cast.",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js" 
+    "start": "node index.js"
   },
   "dependencies": {
-    "express": "^4.17.1" 
+    "express": "^4.17.1",
+    "axios": "^0.24.0" 
   },
   "author": "mani krishna",
   "license": "ISC"
