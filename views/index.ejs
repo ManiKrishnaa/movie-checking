@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Seeker</title>
+    <style>
+        .main {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        input {
+            font-size: 20px;
+            font-family: 'Book Antiqua', serif;
+            padding: 5px;
+            width: 300px;
+        }
+
+        #sbt-btn {
+            color: white;
+            background-color: black;
+            font-size: 20px;
+            font-family: 'Book Antiqua', serif;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 20px;
+        }
+
+        #sbt-btn:hover {
+            color: black;
+            background-color: white;
+        }
+
+        .movie-data {
+            display: flex;
+            align-items: center;
+            border: 2px solid wheat;
+            padding: 30px;
+            margin-bottom: 30px;
+            background-color: antiquewhite;
+        }
+
+        .movie-image {
+            margin-right: 20px;
+        }
+
+        .movie-content {
+            flex: 1;
+        }
+
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+    <div class="container">
+        <form action="/search">
+            <input type="text" name="movie" id="movie" placeholder="Enter Movie Name" required>
+            <button type="submit" id="sbt-btn">Check</button>
+        </form><br><br>
+    </div>
+    <div id="results">
+        <% if (data && data.title) { %>
+            <div class="movie-data">
+                <% if (data.image) { %>
+                    <div class="movie-image">
+                        <img src="<%= data.image %>" alt="Movie Poster" width="200px">
+                    </div>
+                <% } %>
+                <div class="movie-content">
+                    <div><p style="font-size: 16px; font-family: 'Book Antiqua', serif; font-weight: bold;">Title: <%= data.title %></p></div>
+                    <div><p style="font-size: 16px; font-family: 'Book Antiqua', serif; font-weight: bold;">Year: <%= data.year %></p></div>
+                    <div><p style="font-size: 16px; font-family: 'Book Antiqua', serif; font-weight: bold;">Rating: <%= data.rating %></p></div>
+                    <div><p style="font-size: 16px; font-family: 'Book Antiqua', serif; font-weight: bold;">Cast:</p></div>
+                    <ul>
+                        <% data.name.forEach((name) => { %>
+                            <li><%= name %></li>
+                        <% }); %>
+                    </ul>
+                </div>
+            </div>
+        <% } else { %>
+            <p>No results found.</p>
+        <% } %>
+    </div>
+</div>
+</body>
+</html>

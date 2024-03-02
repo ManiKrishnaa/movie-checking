@@ -1,0 +1,11 @@
+{
+  "name": "movie-checking",
+  "version": "1.0.0",
+  "description": "it tells about movie details like year,rating,cast ",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index"
+  },
+  "author": "mani krishna",
+  "license": "ISC"
+}
