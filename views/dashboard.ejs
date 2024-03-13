@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        .navbar {
+            background-color: antiquewhite;
+            color: #000; 
+        }
+        .navbar button {
+            margin-right: 10px;
+            background-color: antiquewhite;
+            border: none;
+            cursor: pointer;
+            padding: 20px;
+        }
+        .navbar button:hover {
+            background-color: gray;
+            color: white;
+        }
+        .form-container {
+            display: none;
+            padding: 20px; 
+        }
+        #logoutForm, #updateProfileForm, #homeContent { 
+            font-family: 'Book Antiqua', serif;
+            font-size: 16px;
+        }
+        #logout-btn, #update-btn { 
+            padding: 20px;
+            background-color: antiquewhite;
+            font-family: 'Book Antiqua', serif;
+            font-size: 15px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+        #logout-btn:hover, #update-btn:hover {
+            background-color: gray;
+            color: white;
+        }
+        .movie-data {
+            display: flex;
+            align-items: center;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .movie-image {
+            margin-right: 20px;
+        }
+
+        .movie-content {
+            flex: 1;
+        }
+
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+        }
+        #movie{
+            width: 150px;
+            padding: 20px;
+            font-family: 'Book Antiqua',serif;
+            font-size: 18px;
+            width: 200px;
+            height: 10px;
+        }
+        #sbt-btn{
+            background-color: antiquewhite;
+            border: none;
+            padding: 10px;
+            width: 100px;
+            height: 50px;
+            cursor: pointer;
+            border-radius: 20px;
+            font-family: 'Book Antiqua',serif;
+            font-size: 15px;
+        }
+        #sbt-btn:hover{
+            background-color: gray;
+            color: white;
+        }
+        #add-to-diary-btn{
+            background-color: antiquewhite;
+            padding: 5px;
+            border: none;
+            cursor: pointer;
+        }
+        #add-to-diary-btn:hover{
+            background-color: gray;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div class="navbar">
+            <button id="homeBtn">Home</button>
+            <button id="logoutBtn">Logout</button>
+            <button id="updateProfileBtn">Update Profile</button>
+            <button id="diaryBtn">My Diary</button>
+        </div>
+        <div class="form-container" id="homeContent">
+            <form action="/search">
+                <input type="text" name="movie" id="movie" placeholder="Enter Movie Name" required>
+                <button type="submit" id="sbt-btn">Check</button>
+            </form><br><br>
+        </div>
+        <div id="results">
+            <% if (data && data.title) { %>
+                <div class="movie-data">
+                    <% if (data.image) { %>
+                        <div class="movie-image">
+                            <img src="<%= data.image %>" alt="Movie Poster" width="200px">
+                        </div>
+                    <% } %>
+                    <div class="movie-content">
+                        <div><p style="font-size: 16px; font-family: 'Book Antiqua', serif; font-weight: bold;">Title: <%= data.title %></p></div>
+                        <div><p style="font-size: 16px; font-family: 'Book Antiqua', serif; font-weight: bold;">Year: <%= data.year %></p></div>
+                        <div><p style="font-size: 16px; font-family: 'Book Antiqua', serif; font-weight: bold;">Rating: <%= data.rating %></p></div>
+                        <div><p style="font-size: 16px; font-family: 'Book Antiqua', serif; font-weight: bold;">Cast:</p></div>
+                        <ul>
+                            <% data.name.forEach((name) => { %>
+                                <li><%= name %></li>
+                            <% }); %>
+                        </ul><br>
+                        <form action="/add-to-diary" method="post" id="mydiaryform">
+                            <input type="hidden" name="movieTitle" value="<%= data.title %>">
+                            <input type="hidden" name="username" value="<%= session.username %>">
+                            <button type="submit" id="add-to-diary-btn">Add to Diary</button>
+                        </form>
+                    </div>
+                </div>
+            <% } else { %>
+                <p>No results found.</p>
+            <% } %>
+        </div>
+        <div class="form-container" id="logoutForm">
+            <form action="/logout" method="post">
+                <button type="submit" id="logout-btn">Logout</button>
+            </form>
+        </div>
+        <div class="form-container" id="updateProfileForm">
+            <form action="/update-profile" method="post">
+                <input type="text" name="name" placeholder="New Name"><br><br>
+                <input type="password" name="password" placeholder="New Password"><br><br>
+                <button type="submit" id="update-btn">Update Profile</button>
+            </form>
+        </div>
+        <div class="form-container" id="mydiary">
+            <h1>My List</h1>
+            <ul>
+                <% diaryEntries.forEach(entry => { %>
+                    <li><%= entry.movieTitle %> - <%= entry.dateAdded.toDateString() %></li>
+                <% }); %>
+            </ul>
+        </div>
+    </div>
+</body>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const homeBtn = document.getElementById("homeBtn");
+        const logoutBtn = document.getElementById("logoutBtn");
+        const updateProfileBtn = document.getElementById("updateProfileBtn");
+        const diaryBtn = document.getElementById("diaryBtn");
+        const homeContent = document.getElementById("homeContent");
+        const logoutForm = document.getElementById("logoutForm");
+        const updateProfileForm = document.getElementById("updateProfileForm");
+        const mydiary = document.getElementById("mydiary");
+
+        homeContent.style.display = "block"; 
+        logoutForm.style.display = "none";
+        updateProfileForm.style.display = "none";
+        mydiary.style.display = "none";
+
+        homeBtn.addEventListener("click", function() {
+            showContent("homeContent");
+        });
+
+        logoutBtn.addEventListener("click", function() {
+            showContent("logoutForm");
+        });
+
+        updateProfileBtn.addEventListener("click", function() {
+            showContent("updateProfileForm");
+        });
+
+        diaryBtn.addEventListener("click",function(){
+            showContent("mydiary");
+        });
+
+        function showContent(contentId) {
+            const forms = document.querySelectorAll('.form-container');
+            forms.forEach(form => {
+                if (form.id === contentId) {
+                    form.style.display = "block";
+                } else {
+                    form.style.display = "none";
+                }
+            });
+        }
+    });
+    fetch('/add-to-diary', {
+    method: 'POST',
+    body: JSON.stringify({ movieTitle, username }),
+    headers: {
+        'Content-Type': 'application/json'
+    }
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while adding movie to diary'); 
+    });
+</script>
+</html>

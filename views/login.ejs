@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .main{
+            padding-top: 140px;
+        }
+        .content{
+            padding: 50px;
+            width: 300px;
+            height: 300px;
+            border: 2px solid black;
+        }
+        h2,input,button,a{
+            font-family: 'Book Antiqua',serif;
+        }
+        a{
+            text-decoration: none;
+        }
+        input{
+            padding: 10px;
+            font-size: 18px;
+        }
+        button{
+            background-color: antiquewhite;
+            width: 80px;
+            height: 50px;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 10px;
+        }
+        button:hover{
+            background-color: gray;
+            color:white;
+        }
+        .error-message {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <center>
+        <div class="main">
+            <div class="content">
+                <form action="/checklogin" method="post">
+                    <h2>Login</h2>
+                    <input type="text" name="uname" id="uname" placeholder="Enter Username" required> <br><br>
+                    <input type="password" name="pwd" id="pwd" placeholder="Enter Password" required> <br><br>
+                    <button type="submit" id="loginbtn">Login</button><br><br>
+                    <a href="/reg">Register now</a>
+                </form>
+                <div class="error-message">
+                    <% if (error) { %>
+                        <p><%= error %></p> 
+                    <% } %>
+                </div>
+            </div>
+        </div>  
+    </center>
+</body>
+</html>
